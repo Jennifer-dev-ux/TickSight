@@ -1,0 +1,660 @@
+/* ===== Global reset & layout ===== */
+*,
+*::before,
+*::after {
+    box-sizing: border-box;
+}
+
+html,
+body {
+    margin: 0;
+    padding: 0;
+}
+
+/* Let the footer sit just after the content without huge gaps */
+body {
+    font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    background: #f7f8fb;
+    color: #222;
+}
+
+/* Center content within a fixed width shell */
+.shell {
+    max-width: 1100px;
+    margin: 0 auto;
+    padding: 0 1rem;
+}
+
+/* ===== Header ===== */
+.site-header {
+    background: #16355b;
+    color: #fff;
+}
+
+.header-inner {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0.6rem 0;
+}
+
+.site-header .logo {
+    font-weight: 700;
+    font-size: 1.05rem;
+}
+
+.main-nav a {
+    color: #fff;
+    margin-left: 1rem;
+    text-decoration: none;
+    font-size: 0.95rem;
+}
+
+.main-nav a:hover,
+.main-nav a.active {
+    text-decoration: underline;
+}
+
+/* ===== Main content wrapper ===== */
+.page-content {
+    padding: 0.75rem 0 0.5rem; /* reduced bottom padding so footer isn't "too low" */
+}
+
+.page-inner {
+    /* so content lines up with header/footer */
+    max-width: 1100px;
+    margin: 0 auto;
+    padding: 0 1rem 0.25rem;
+}
+
+/* Remove big bottom gaps from last element on a page */
+.page-inner > *:last-child {
+    margin-bottom: 0;
+}
+
+/* ===== Footer ===== */
+.site-footer {
+    background: #e4e8f0;
+    padding: 0.5rem 0;
+    font-size: 0.85rem;
+}
+
+.footer-inner {
+    max-width: 1100px;
+    margin: 0 auto;
+    padding: 0 1rem;
+    text-align: center;
+}
+
+/* ===== Map page ===== */
+
+/* Filters bar – thinner vertically, contents unchanged */
+.map-filters-top {
+    margin-top: 0.15rem;          /* closer to header */
+    margin-bottom: 0.35rem;       /* small gap above map */
+    padding: 0.25rem 1rem;        /* << this shrinks the white bar height */
+    background: #fff;
+    border-radius: 8px;
+    box-shadow: 0 1px 4px rgba(0,0,0,0.08);
+}
+
+.map-filters-top h3 {
+    margin: 0 0 0.2rem;       /* tighter heading spacing */
+    font-size: 1rem;
+}
+
+/* compact filter form layout */
+.map-filters-form {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem 1rem;                    /* compact vertical spacing */
+    align-items: flex-end;
+}
+
+.map-filters-form label {
+    display: flex;
+    flex-direction: column;
+    gap: 0.15rem;
+    font-size: 0.85rem;
+    min-width: 160px;
+}
+
+.map-filters-top select,
+.map-filters-top button {
+    padding: 0.35rem 0.5rem;
+    border-radius: 6px;
+    border: 1px solid #cdd4e0;
+    font-size: 0.85rem;
+}
+
+.map-filters-top button[type="submit"] {
+    min-width: 110px;
+    background: #16355b;
+    color: #fff;
+    border: none;
+    cursor: pointer;
+    transition: background 0.15s ease;
+}
+
+.map-filters-top button[type="submit"]:hover {
+    background: #0f2640;
+}
+
+/* Map + sidebar layout */
+.map-layout {
+    margin-top: 0.1rem; /* small gap below filters */
+}
+
+/* Map + sidebar cards */
+.map-sidebar {
+    background: #fff;
+    border-radius: 8px;
+    padding: 1rem;
+    box-shadow: 0 1px 4px rgba(0, 0, 0, 0.06);
+}
+
+/* Make the map and panel a bit taller and equal in height visually */
+#map,
+.map-container {
+    width: 100%;
+    height: 480px;       /* taller */
+    min-height: 440px;
+    border-radius: 8px;
+    overflow: hidden;
+    box-shadow: 0 1px 4px rgba(0, 0, 0, 0.06);
+}
+
+/* Sidebar should roughly match the map height */
+.map-sidebar {
+    max-height: 480px;
+    overflow-y: auto;
+}
+
+/* Legend under the filters */
+.map-legend {
+    margin-top: 0.2rem;      /* closer to controls */
+    font-size: 0.8rem;
+    display: flex;
+    gap: 1rem;
+    flex-wrap: wrap;
+}
+
+.map-legend span {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.3rem;
+}
+
+.map-legend-dot {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    border: 2px solid #fff;
+    box-shadow: 0 0 0 1px rgba(0,0,0,0.12);
+}
+
+.map-legend-dot.low    { background: #2ecc71; }
+.map-legend-dot.medium { background: #f1c40f; }
+.map-legend-dot.high   { background: #e74c3c; }
+
+/* Sightings details timeline etc. */
+.map-sidebar h2 {
+    margin-top: 0;
+}
+
+.sidebar-actions {
+    margin-top: 1rem;
+}
+
+.sidebar-actions button {
+    width: 100%;
+    padding: 0.6rem;
+    border-radius: 6px;
+    background: #007b83;
+    color: #fff;
+    border: none;
+    cursor: pointer;
+}
+
+/* ===== Report page ===== */
+.alert {
+    padding: 0.75rem 1rem;
+    border-radius: 6px;
+    margin-bottom: 1rem;
+}
+
+.alert-success {
+    background: #e3f6e8;
+    color: #1b6b34;
+    border: 1px solid #b1e1bf;
+}
+
+.report-section {
+    max-width: 600px;
+    margin: 0 auto 0.5rem;
+    background: #fff;
+    padding: 1.5rem;
+    border-radius: 8px;
+    box-shadow: 0 1px 4px rgba(0, 0, 0, 0.06);
+}
+
+.report-section h1 {
+    margin-top: 0;
+}
+
+.form-row {
+    margin-bottom: 0.9rem;
+}
+
+.form-row label {
+    display: block;
+    margin-bottom: 0.25rem;
+    font-size: 0.9rem;
+}
+
+.report-form input,
+.report-form textarea,
+.report-form select {
+    width: 100%;
+    padding: 0.45rem 0.55rem;
+    border-radius: 6px;
+    border: 1px solid #cdd4e0;
+    font-size: 0.9rem;
+}
+
+.error {
+    color: #b30000;
+    font-size: 0.8rem;
+    margin-top: 0.15rem;
+}
+
+.field-error {
+    border-color: #b30000 !important;
+}
+
+.radio-group label {
+    margin-right: 1rem;
+    font-size: 0.9rem;
+}
+
+.btn-primary {
+    padding: 0.6rem 1rem;
+    border-radius: 6px;
+    border: none;
+    background: #16355b;
+    color: #fff;
+    cursor: pointer;
+}
+
+/* ===== Education & Prevention pages ===== */
+.education-section,
+.prevention-section {
+    max-width: 900px;
+    margin: 0 auto 0.5rem;
+}
+
+.species-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 1rem;
+    margin-bottom: 1.25rem;
+}
+
+.species-card {
+    background: #fff;
+    border-radius: 8px;
+    padding: 1rem;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+}
+
+.species-latin {
+    font-style: italic;
+    font-size: 0.9rem;
+    color: #555;
+}
+
+.tips-group {
+    background: #fff;
+    border-radius: 8px;
+    padding: 1rem;
+    margin-bottom: 0.75rem;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+}
+
+.hint {
+    font-size: 0.8rem;
+    color: #666;
+}
+
+/* Seasonal activity chart container */
+.chart-container {
+    background: #fff;
+    border-radius: 8px;
+    padding: 1rem;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+    margin-bottom: 0.75rem;
+}
+
+/* Filters for the chart */
+.chart-filters {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.75rem 1rem;
+    align-items: flex-end;
+    margin-bottom: 0.75rem;
+}
+
+.chart-filters label {
+    display: flex;
+    flex-direction: column;
+    gap: 0.25rem;
+    font-size: 0.85rem;
+}
+
+.chart-filters select,
+.chart-filters button {
+    padding: 0.4rem 0.55rem;
+    border-radius: 6px;
+    border: 1px solid #cdd4e0;
+    font-size: 0.9rem;
+}
+
+/* Chart canvas height */
+.chart-wrapper {
+    position: relative;
+    height: 260px;
+}
+
+/* Timeline & quick actions in sidebar */
+.sightings-timeline {
+    list-style: none;
+    padding-left: 0;
+    margin: 0.5rem 0 0.75rem;
+    max-height: 140px;
+    overflow-y: auto;
+    border-left: 2px solid #d0d7e5;
+}
+
+.timeline-item {
+    padding: 0.35rem 0.75rem;
+    position: relative;
+}
+
+.timeline-item::before {
+    content: "";
+    position: absolute;
+    left: -5px;
+    top: 0.8rem;
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: #16355b;
+}
+
+.timeline-date {
+    display: block;
+    font-size: 0.78rem;
+    color: #666;
+}
+
+.timeline-species {
+    font-size: 0.9rem;
+    font-weight: 500;
+}
+
+.timeline-subtitle {
+    margin: 0 0 0.25rem;
+    font-size: 0.82rem;
+    color: #555;
+}
+
+.quick-actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    margin-top: 0.75rem;
+}
+
+.quick-actions button,
+.quick-actions a {
+    padding: 0.4rem 0.7rem;
+    border-radius: 6px;
+    font-size: 0.85rem;
+    border: none;
+    cursor: pointer;
+    text-decoration: none;
+}
+
+.quick-actions .qa-report {
+    background: #16355b;
+    color: #fff;
+}
+
+.quick-actions .qa-directions {
+    background: #eef3ff;
+    color: #16355b;
+    border: 1px solid #cdd4e0;
+}
+
+.quick-actions .qa-share {
+    background: #f5f7fa;
+    color: #333;
+    border: 1px solid #d3d8e2;
+}
+
+.sighting-photo {
+    margin: 0.75rem 0;
+}
+
+.sighting-photo h6 {
+    margin: 0 0 0.35rem;
+    font-size: 0.85rem;
+    font-weight: 600;
+    color: #333;
+}
+
+.sighting-photo img {
+    max-width: 100%;
+    border-radius: 6px;
+    display: block;
+    box-shadow: 0 1px 4px rgba(0,0,0,0.15);
+}
+
+
+/* ===== Mobile tweaks ===== */
+
+@media (max-width: 900px) {
+    .header-inner {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 0.25rem;
+    }
+
+    .main-nav a {
+        margin-left: 0.75rem;
+    }
+
+    .map-sidebar {
+        max-height: none;
+    }
+
+    #map,
+    .map-container {
+        height: 360px;
+        min-height: 320px;
+    }
+}
+
+@media (max-width: 700px) {
+    .map-filters-form,
+    .chart-filters {
+        flex-direction: column;
+        align-items: stretch;
+    }
+
+    .map-filters-form label,
+    .chart-filters label {
+        min-width: 0;
+        width: 100%;
+    }
+
+    .map-filters-top select,
+    .map-filters-top button,
+    .chart-filters select,
+    .chart-filters button {
+        width: 100%;
+    }
+}
+/* Make the top filters card less tall */
+.map-filters-top.py-3 {
+    padding-top: 0.01rem !important;   /* was ~1–1.5rem from Bootstrap */
+    padding-bottom: 0.01rem !important;
+}
+
+/* Tighten heading spacing inside filters */
+.map-filters-top h3 {
+    margin-top: 0;
+    margin-bottom: 0;
+}
+.prevention-wrapper {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+}
+
+.prevention-content {
+    max-width: 800px;        /* adjust as you like */
+    width: 100%;
+}
+/* Center all main page headings */
+h1, h2, h3, h4 {
+    text-align: center;
+}
+
+.map-filters-top {
+    border-radius: 8px;
+    background: #ffffff;
+    padding-top: 0.75rem !important;
+    padding-bottom: 0.5rem !important;
+}
+
+.map-filters-top .form-select-sm {
+    padding-top: .25rem;
+    padding-bottom: .25rem;
+    font-size: .875rem;
+}
+
+.map-filters-top label {
+    font-size: .85rem;
+}
+/* ===== High contrast mode ===== */
+
+/* ===== High contrast mode ===== */
+
+body.high-contrast {
+    background: #000;
+    color: #fff;
+}
+
+/* Header & nav */
+body.high-contrast .site-header {
+    background: #000;
+    color: #fff;
+    border-bottom: 2px solid #fff;
+}
+
+body.high-contrast .main-nav a {
+    color: #fff;
+}
+
+body.high-contrast .main-nav a:hover {
+    text-decoration: underline;
+}
+
+/* Page text – kill grey text */
+body.high-contrast,
+body.high-contrast p,
+body.high-contrast li,
+body.high-contrast small,
+body.high-contrast .hint,
+body.high-contrast .map-legend,
+body.high-contrast .map-legend span,
+body.high-contrast .text-muted {
+    color: #ffffff !important;
+}
+
+/* Cards / panels / sections */
+body.high-contrast .map-filters-top,
+body.high-contrast .map-sidebar,
+body.high-contrast .report-section,
+body.high-contrast .species-card,
+body.high-contrast .tips-group,
+body.high-contrast .education-section,
+body.high-contrast .prevention-content {
+    background: #000;
+    color: #fff;
+    border: 1px solid #fff;
+}
+
+/* FILTERS BAR SPECIFICALLY */
+body.high-contrast .map-filters-top {
+    background: #000;
+    border-radius: 8px;
+}
+
+body.high-contrast .map-filters-top .form-label,
+body.high-contrast .map-filters-top h3 {
+    color: #fff;
+}
+
+/* Form controls (site-wide) */
+body.high-contrast input,
+body.high-contrast select,
+body.high-contrast textarea {
+    background: #000 !important;
+    color: #fff !important;
+    border-color: #fff !important;
+}
+
+/* Make dropdowns in filter bar clearly visible */
+body.high-contrast .map-filters-top .form-select {
+    background-color: #000 !important;
+    color: #fff !important;
+}
+
+/* Buttons */
+body.high-contrast .btn,
+body.high-contrast .btn-primary,
+body.high-contrast .btn-success {
+    background-color: #fff !important;
+    color: #000 !important;
+    border-color: #fff !important;
+}
+
+body.high-contrast .btn-outline-light {
+    background-color: #fff !important;
+    color: #000 !important;
+    border-color: #fff !important;
+}
+
+/* Map container outline */
+body.high-contrast .map-container {
+    border: 2px solid #fff;
+}
+
+/* Links */
+body.high-contrast a {
+    color: #ffd700;
+}
+
+body.high-contrast a:hover {
+    color: #ffffff;
+    text-decoration: underline;
+}
+
+/* Footer */
+body.high-contrast .site-footer {
+    background: #000;
+    color: #fff;
+    border-top: 2px solid #fff;
+}

@@ -1,0 +1,105 @@
+<!-- Filters -->
+<section class="map-filters-top container py-2">
+    <form method="get"
+          action="../index.php"
+          class="map-filters-form row gx-3 gy-2 align-items-end">
+
+        <input type="hidden" name="page" value="map">
+
+        <!-- Species -->
+        <div class="col-12 col-md-4">
+            <label class="form-label mb-1">Species</label>
+            <select name="species" class="form-select form-select-sm">
+                <option value="">All species</option>
+
+                <option value="Passerine tick"        <?= ($selectedSpecies ?? '') === 'Passerine tick' ? 'selected' : '' ?>>Passerine tick</option>
+                <option value="Fox/badger tick"       <?= ($selectedSpecies ?? '') === 'Fox/badger tick' ? 'selected' : '' ?>>Fox/badger tick</option>
+                <option value="Southern rodent tick"  <?= ($selectedSpecies ?? '') === 'Southern rodent tick' ? 'selected' : '' ?>>Southern rodent tick</option>
+                <option value="Marsh tick"            <?= ($selectedSpecies ?? '') === 'Marsh tick' ? 'selected' : '' ?>>Marsh tick</option>
+                <option value="Tree-hole tick"        <?= ($selectedSpecies ?? '') === 'Tree-hole tick' ? 'selected' : '' ?>>Tree-hole tick</option>
+            </select>
+        </div>
+
+        <!-- Date Range -->
+        <div class="col-12 col-md-4">
+            <label class="form-label mb-1">Date range</label>
+            <select name="dateRange" class="form-select form-select-sm">
+                <option value="">All time</option>
+
+                <option value="7_days"      <?= ($selectedRange ?? '') === '7_days' ? 'selected' : '' ?>>Last 7 days</option>
+                <option value="30_days"     <?= ($selectedRange ?? '') === '30_days' ? 'selected' : '' ?>>Last 30 days</option>
+                <option value="90_days"     <?= ($selectedRange ?? '') === '90_days' ? 'selected' : '' ?>>Last 90 days</option>
+                <option value="6_months"    <?= ($selectedRange ?? '') === '6_months' ? 'selected' : '' ?>>Last 6 months</option>
+                <option value="6_12_months" <?= ($selectedRange ?? '') === '6_12_months' ? 'selected' : '' ?>>6–12 months ago</option>
+                <option value="12m_5y"      <?= ($selectedRange ?? '') === '12m_5y' ? 'selected' : '' ?>>12 months – 5 years ago</option>
+                <option value="5_15y"       <?= ($selectedRange ?? '') === '5_15y' ? 'selected' : '' ?>>5 – 15 years ago</option>
+            </select>
+        </div>
+
+        <!-- Severity -->
+        <div class="col-12 col-md-3">
+            <label class="form-label mb-1">Severity level</label>
+            <select name="severity" class="form-select form-select-sm">
+                <option value="">All levels</option>
+                <option value="low"    <?= ($selectedSeverity ?? '') === 'low'    ? 'selected' : '' ?>>Low</option>
+                <option value="medium" <?= ($selectedSeverity ?? '') === 'medium' ? 'selected' : '' ?>>Medium</option>
+                <option value="high"   <?= ($selectedSeverity ?? '') === 'high'   ? 'selected' : '' ?>>High</option>
+            </select>
+        </div>
+
+        <!-- Apply Filters -->
+        <div class="col-12 col-md-1 d-grid">
+            <button type="submit" class="btn btn-primary btn-sm w-100" style="margin-top: 0;">
+                Apply
+            </button>
+        </div>
+
+    </form>
+
+    <!-- Colour severity -->
+    <div class="map-legend mt-2 d-flex gap-3 flex-wrap small">
+        <span><span class="map-legend-dot low"></span> Low</span>
+        <span><span class="map-legend-dot medium"></span> Medium</span>
+        <span><span class="map-legend-dot high"></span> High</span>
+    </div>
+</section>
+
+
+<!-- Map + side panel layout -->
+<section class="map-layout container-fluid py-3">
+    <div class="row g-3">
+        <div class="col-12 col-lg-8">
+            <div id="map" class="map-container border rounded" style="min-height: 320px;"></div>
+        </div>
+
+        <div class="col-12 col-lg-4">
+            <aside class="map-sidebar">
+                <h2 class="h5">Sighting details</h2>
+                <div id="sighting-details">
+                    <p>Click on a marker for more details.</p>
+                </div>
+
+                <div class="sidebar-actions mt-3">
+                    <button id="reportFromSidebar" type="button" class="btn btn-success w-100">
+                        Report a sighting
+                    </button>
+                </div>
+            </aside>
+        </div>
+    </div>
+</section>
+
+
+<script>
+    const apiSightings     = <?= json_encode($sightings ?? [], JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE) ?>;
+    const userSightings    = <?= json_encode($userSightings ?? [], JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE) ?>;
+    const selectedSpecies  = <?= json_encode($selectedSpecies ?? '') ?>;
+    const selectedRange    = <?= json_encode($selectedRange ?? '') ?>;
+    const selectedSeverity = <?= json_encode($selectedSeverity ?? '') ?>;
+</script>
+<script src="../js/map.js"></script>
+<script src="../js/accessibility.js"></script>
+
+
+
+
