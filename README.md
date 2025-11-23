@@ -1,3 +1,12 @@
+  
+## Project Outline:
+I designed the system to meet the core requirements of the brief and to demonstrate good software engineering practice. It includes:
+- **Structured MVC pattern for maintainability** – clear separation between controllers, models, and views so the project is easy to extend and debug.
+- **Full use of API data** – loads and processes external tick sighting data, transforming it into a format suitable for mapping and filtering.
+- **Merging external data with user-submitted reports** – combines dataset sightings with new reports from the “Report a sighting” form, so the map always reflects both API and user-generated data.
+- **Interactive front-end experience** – map markers, filters, and a dynamic sidebar all make it easier to explore the data.
+- **Server-side validation and secure data handling** – validates form input on the backend, sanitises user data, and stores it safely in the database.
+- **Good UX, clean UI, and accessibility features** – responsive layout for mobile and desktop (Using Bootstrap), clear visual hierarchy, ARIA attributes, and High Contrast mode for improved colour visibility
 
 ### Tech Stack Used
 - PHP 8.5
@@ -9,17 +18,8 @@
 - SQLite
 - MVC architecture (Controllers / Models / Views)
 - cURL for API communication
-- Server-side validation 
+- Server-side validation
   
-## Project Outline:
-I designed the system to meet the core requirements of the brief and to demonstrate good software engineering practice. It includes:
-- **Structured MVC pattern for maintainability** – clear separation between controllers, models, and views so the project is easy to extend and debug.
-- **Full use of API data** – loads and processes external tick sighting data, transforming it into a format suitable for mapping and filtering.
-- **Merging external data with user-submitted reports** – combines dataset sightings with new reports from the “Report a sighting” form, so the map always reflects both API and user-generated data.
-- **Interactive front-end experience** – map markers, filters, and a dynamic sidebar all make it easier to explore the data.
-- **Server-side validation and secure data handling** – validates form input on the backend, sanitises user data, and stores it safely in the database.
-- **Good UX, clean UI, and accessibility features** – responsive layout for mobile and desktop (Using Bootstrap), clear visual hierarchy, ARIA attributes, and High Contrast mode for improved colour visibility
-
 ## Features:
 ### Interactive Tick Map
 Built with Leaflet.js
