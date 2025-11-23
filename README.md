@@ -1,6 +1,6 @@
 
 ### Tech Stack Used
-- PHP 8+
+- PHP 8.5
 - HTML5
 - CSS3
 - Bootstrap 5
