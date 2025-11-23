@@ -1,5 +1,6 @@
   
 ## Project Outline:
+### Choice Justification:
 I designed the system to meet the core requirements of the brief and to demonstrate good software engineering practice. It includes:
 - **Structured MVC pattern for maintainability** – clear separation between controllers, models, and views so the project is easy to extend and debug.
 - **Full use of API data** – loads and processes external tick sighting data, transforming it into a format suitable for mapping and filtering.
