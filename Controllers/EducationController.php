@@ -10,18 +10,20 @@ class EducationController
 
     public function __construct()
     {
+        // Instantiate the API model so we can reuse it across methods
         $this->tickModel = new TickSighting();
     }
 
     public function index(): void
     {
-        // 1. Get all API sightings
+        // Pull the full list of API sightings once
         $allSightings = $this->tickModel->getAll();
 
-        // 2. Derive available cities + years from the data
+        // These arrays will hold the unique cities and years we find in the dataset
         $cities = [];
         $years  = [];
-        // Species we want to show in the education cards
+
+        // These are the species we want to build the “species info cards” for
         $interestingSpecies = [
             'Passerine tick',
             'Fox/badger tick',
@@ -30,7 +32,7 @@ class EducationController
             'Tree-hole tick',
         ];
 
-
+        // Extract cities and years from all API records
         foreach ($allSightings as $sighting) {
             if (!empty($sighting['location'])) {
                 $cities[] = $sighting['location'];
@@ -42,58 +44,70 @@ class EducationController
             }
         }
 
+        // Keep only unique values and sort alphabetically / numerically
         $cities = array_values(array_unique($cities));
         sort($cities);
 
         $years = array_values(array_unique($years));
         sort($years);
 
-        // Derive available species from the data
+        // Build a list of species actually found in the API data
         $speciesList = [];
-
         foreach ($allSightings as $sighting) {
             if (!empty($sighting['species'])) {
                 $speciesList[] = $sighting['species'];
             }
         }
 
+        // Remove duplicates
         $speciesList = array_values(array_unique($speciesList));
         sort($speciesList);
 
-        $selectedCity = $_GET['city'] ?? ($cities[0] ?? null);
-        $selectedYear = isset($_GET['year']) ? (int)$_GET['year'] : (end($years) ?: null);
-        $selectedSpecies = $_GET['species'] ?? ''; // empty string = all species
+        // Read the selected filters from the URL or fall back to defaults
+        $selectedCity    = $_GET['city']    ?? ($cities[0] ?? null);
+        $selectedYear    = isset($_GET['year']) ? (int)$_GET['year'] : (end($years) ?: null);
+        $selectedSpecies = $_GET['species'] ?? '';
 
+        // Start an array of 12 months all set to zero
         $monthlyCounts = array_fill(1, 12, 0);
 
+        // Only calculate the chart if both a city and year are selected
         if ($selectedCity && $selectedYear) {
             foreach ($allSightings as $sighting) {
+
+                // Skip incomplete records
                 if (empty($sighting['location']) || empty($sighting['date'])) {
                     continue;
                 }
 
-                // City must match
+                // Filter by city
                 if ($sighting['location'] !== $selectedCity) {
                     continue;
                 }
 
-                // Optional species filter: if selectedSpecies is set, only count that species
-                if ($selectedSpecies !== '' && (!isset($sighting['species']) || $sighting['species'] !== $selectedSpecies)) {
+                // If a specific species was chosen, enforce that here
+                if ($selectedSpecies !== '' &&
+                    (!isset($sighting['species']) || $sighting['species'] !== $selectedSpecies)) {
                     continue;
                 }
 
+                // Convert to date object
                 $dateObj = new DateTime($sighting['date']);
                 $year    = (int)$dateObj->format('Y');
                 $month   = (int)$dateObj->format('n');
 
+                // Only count sightings from the selected year
                 if ($year === $selectedYear && $month >= 1 && $month <= 12) {
                     $monthlyCounts[$month]++;
                 }
             }
         }
 
-        // Build stats for each species using the species endpoint
+
+        // Build the “top cities” and “peak month” info for each interesting species
         $speciesStats = [];
+
+        // Month number → readable month name
         $monthNames = [
             1 => 'January',  2 => 'February', 3 => 'March',
             4 => 'April',    5 => 'May',      6 => 'June',
@@ -101,13 +115,16 @@ class EducationController
             10 => 'October', 11 => 'November',12 => 'December',
         ];
 
+        // Use the species endpoint to compute stats individually for each species
         foreach ($interestingSpecies as $speciesName) {
             $sightings = $this->tickModel->getBySpecies($speciesName);
 
             $cityCounts  = [];
             $monthCounts = array_fill(1, 12, 0);
 
+            // Build counts based on the species-specific response
             foreach ($sightings as $sighting) {
+
                 // Count by city
                 if (!empty($sighting['location'])) {
                     $city = $sighting['location'];
@@ -123,46 +140,52 @@ class EducationController
                             $monthCounts[$month]++;
                         }
                     } catch (Exception $e) {
-                        // ignore invalid dates
+                        // Ignore any badly formatted dates
                     }
                 }
             }
 
-            // Top 2 cities
+            // Sort cities by highest number of sightings first
             arsort($cityCounts);
+
+            // Keep only the top two
             $topCities = array_keys($cityCounts);
             $topCities = array_slice($topCities, 0, 2);
 
-            // Peak month
+            // Determine which month had the most sightings
             $peakMonthName = null;
             if (max($monthCounts) > 0) {
-                $peakMonthNum = array_keys($monthCounts, max($monthCounts), true)[0];
+                $peakMonthNum  = array_keys($monthCounts, max($monthCounts), true)[0];
                 $peakMonthName = $monthNames[$peakMonthNum] ?? null;
             }
 
+            // Store the stats so the view can display them
             $speciesStats[$speciesName] = [
                 'topCities' => $topCities,
                 'peakMonth' => $peakMonthName,
             ];
         }
 
+        // Title for the page template
         $pageTitle = 'Tick Education & Prevention';
 
+        // Data passed to the view
         $data = [
-            'pageTitle'      => $pageTitle,
-            'cities'         => $cities,
-            'years'          => $years,
+            'pageTitle'       => $pageTitle,
+            'cities'          => $cities,
+            'years'           => $years,
             'speciesList'     => $speciesList,
-            'selectedCity'   => $selectedCity,
-            'selectedYear'   => $selectedYear,
+            'selectedCity'    => $selectedCity,
+            'selectedYear'    => $selectedYear,
             'selectedSpecies' => $selectedSpecies,
-            'monthlyCounts'  => $monthlyCounts,
+            'monthlyCounts'   => $monthlyCounts,
             'speciesStats'    => $speciesStats,
-
         ];
 
+        // Extract the variables so the template can use them directly
         extract($data);
 
+        // Render the MVC view
         require __DIR__ . '/../Views/templates/header.phtml';
         require __DIR__ . '/../Views/education.phtml';
         require __DIR__ . '/../Views/templates/footer.phtml';

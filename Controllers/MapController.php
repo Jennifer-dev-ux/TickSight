@@ -13,42 +13,46 @@ class MapController
         $tickModel = new TickSighting();
         $userModel = new UserSighting();
 
-        // 1) Fetch raw data
-        $apiSightingsRaw   = $tickModel->getAll();           // from Elanco API
-        $userSightingsRaw  = $userModel->getAll();           // raw DB rows (for tables, etc.)
-        $userSightingsNorm = $userModel->getAllNormalised(); // shaped like API data
+        // Pull all API sightings (raw) from the Elanco API
+        $apiSightingsRaw   = $tickModel->getAll();
 
-        // 2) Read filters from query string
+        // Get raw DB rows of user-submitted sightings
+        $userSightingsRaw  = $userModel->getAll();
+
+        // Get user sightings converted into the same shape as API records
+        $userSightingsNorm = $userModel->getAllNormalised();
+
+        // Read filter choices from the query string
         $species   = $_GET['species']   ?? '';
         $dateRange = $_GET['dateRange'] ?? '';
         $severity  = $_GET['severity']  ?? '';
 
-        // 3) Combine API + user data into one array for the map
-        //    Both sides should share keys: date, location, species, latinName, source
+        // Merge API + normalised user sightings into a single dataset
         $combinedSightings = array_merge($apiSightingsRaw, $userSightingsNorm);
 
-        // 4) Apply species + date range filters on the combined set
+        // Apply species + date range filtering
         $filteredSightings = $this->filterSightings($combinedSightings, $species, $dateRange);
 
-        // 5) Pass filtered data to the view
+        // Pack everything we need to pass into the view
         $data = [
-            'sightings'        => $filteredSightings, // used as apiSightings in JS
-            'userSightings'    => $userSightingsRaw,  // optional: for other displays
+            'sightings'        => $filteredSightings,
+            'userSightings'    => $userSightingsRaw,
             'selectedSpecies'  => $species,
             'selectedRange'    => $dateRange,
             'selectedSeverity' => $severity,
             'page'             => 'map',
         ];
 
+        // Render the map view
         $this->render('index', $data);
     }
 
     /**
-     * Apply species + date-range filtering to the combined sightings array.
+     * Apply species and date-range filters to the combined data.
      */
     private function filterSightings(array $sightings, string $species, string $dateRange): array
     {
-        // Species filter (exact match)
+        // Filter by species if one was selected
         if ($species !== '') {
             $sightings = array_values(array_filter(
                 $sightings,
@@ -56,21 +60,20 @@ class MapController
             ));
         }
 
-        // Date range filter
+        // Pass data into the date-range filter
         $sightings = $this->filterByDateRange($sightings, $dateRange);
 
         return $sightings;
     }
 
     /**
-     * Filter an array of sightings by a named date range.
-     *
-     * Expects ['date' => 'YYYY-MM-DDTHH:MM:SS', ...] in each row.
+     * Handle date-range filtering based on the selected option.
+     * Uses DateTimeImmutable for safety and consistency.
      */
     private function filterByDateRange(array $sightings, ?string $range): array
     {
         if ($range === null || $range === '') {
-            // "All time"
+            // No date range selected → return everything
             return $sightings;
         }
 
@@ -78,6 +81,7 @@ class MapController
         $from = null;
         $to   = null;
 
+        // Work out the boundaries of the selected date window
         switch ($range) {
             case '7_days':
                 $from = $now->modify('-7 days');
@@ -96,25 +100,29 @@ class MapController
                 break;
 
             case '6_12_months':
+                // Between 6 and 12 months ago
                 $to   = $now->modify('-6 months');
                 $from = $now->modify('-12 months');
                 break;
 
             case '12m_5y':
+                // Between 1 and 5 years ago
                 $to   = $now->modify('-12 months');
                 $from = $now->modify('-5 years');
                 break;
 
             case '5_15y':
+                // Between 5 and 15 years ago
                 $to   = $now->modify('-5 years');
                 $from = $now->modify('-15 years');
                 break;
 
             default:
-                // Unknown range key => don’t filter by date at all
+                // Unknown range name → skip filtering
                 return $sightings;
         }
 
+        // Filter each sighting against our computed date window
         return array_values(array_filter($sightings, function (array $sighting) use ($from, $to): bool {
             if (empty($sighting['date'])) {
                 return false;
@@ -126,9 +134,12 @@ class MapController
                 return false;
             }
 
+            // Check lower bound
             if ($from !== null && $dt < $from) {
                 return false;
             }
+
+            // Check upper bound
             if ($to !== null && $dt > $to) {
                 return false;
             }
@@ -137,11 +148,18 @@ class MapController
         }));
     }
 
+    /**
+     * Render a view file with its data.
+     */
     private function render(string $view, array $data = []): void
     {
+        // Extract array keys into variables for cleaner template usage
         extract($data);
+
+        // Page title for the tab/heading
         $pageTitle = 'TickSight UK – Map';
 
+        // Include the layout templates
         require __DIR__ . '/../Views/templates/header.phtml';
         require __DIR__ . '/../Views/' . $view . '.phtml';
         require __DIR__ . '/../Views/templates/footer.phtml';
