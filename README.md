@@ -21,7 +21,13 @@ I designed the system to meet the core requirements of the brief and to demonstr
 - MVC architecture (Controllers / Models / Views)
 - cURL for API communication
 - Server-side validation
-  
+
+### Wireframes of UI 
+<img width="538" height="377" alt="Home wf" src="https://github.com/user-attachments/assets/51fb312d-3127-41b0-aed0-e4df8034e88a" />
+<img width="343" height="251" alt="sighting wf" src="https://github.com/user-attachments/assets/096871dd-e5bf-4655-ade6-9657a4678ae6" />
+<img width="337" height="397" alt="Info wf" src="https://github.com/user-attachments/assets/6fed4abd-229e-4d67-8432-49e1a670578e" />
+<img width="355" height="254" alt="prevention wf" src="https://github.com/user-attachments/assets/a2270ba0-4916-4e53-8990-81cbb3a7fa81" />
+
 ## Features:
 ### Interactive Tick Map
 Built with Leaflet.js
@@ -78,3 +84,4 @@ Run locally:
 
 ## To visit the application Open this in your browser:
 http://localhost:8000/index.php
+
